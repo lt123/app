@@ -11,7 +11,8 @@ import com.app.customermgr.model.Customer;
 public interface ICustomerDao {
 	public int insert(Customer customer);
 	public int update(Customer customer);
-	public int delete(Customer customer);
+	public int delete(Integer customer);
 	public Customer getCustomerById(Integer id);
 	public List<Customer> findCustomerByCondition(Map<String,Object> map);
+	public Integer findCountByCondition(Map<String, Object> map);
 }

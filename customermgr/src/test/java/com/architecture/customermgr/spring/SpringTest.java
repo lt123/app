@@ -1,7 +1,9 @@
 package com.architecture.customermgr.spring;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,5 +38,12 @@ public class SpringTest {
 		for (Customer customer : customers) {
 			System.err.println("customer>>>>  >>>>  " + customer);
 		}
+	}
+	
+	@Test
+	public void test03() throws Exception {
+		Map<String,Object> m = new HashMap<>();
+		m.put("trueName", "trueName2");
+		System.out.println(customerService.findCountByCondition(m));
 	}
 }

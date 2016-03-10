@@ -36,19 +36,20 @@ public class PageResult<E> {
 	 */
 	private List<E> rows = new ArrayList<>();// 当前页码的数据
 
-	public PageResult(int currentPage, int pageSize, int totalCount) {
-		// currentPage,pageSize输入负数
-		this.currentPage = currentPage < 1 ? 1 : currentPage;
-		this.pageSize = pageSize < 1 ? 10 : pageSize;
-		this.totalCount = totalCount;
+	public PageResult(Integer currentPage, Integer pageSize, Integer totalCount, List<E> rows) {
+		// currentPage,pageSize输入负数或null
+		this.currentPage = currentPage == null || currentPage <= 0 ? 1 : currentPage; 
+		this.pageSize = pageSize == null || pageSize <= 0 ? 10 : pageSize;
 		
 		// 计算总的页数
+		this.totalCount = totalCount;
 		this.totalPage = (this.totalCount + this.pageSize - 1) / this.pageSize;
 
-		// 判断当前页码是否大于总的页码
+		// 判断当前页码是否大于总的页码ge
 		this.currentPage = this.currentPage > this.totalPage ? this.totalPage
 				: this.currentPage;
-
+		
+		this.rows = rows;
 	}
 
 	public Integer getCurrentPage() {

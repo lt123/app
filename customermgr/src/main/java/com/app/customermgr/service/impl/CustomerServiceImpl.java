@@ -20,7 +20,7 @@ public class CustomerServiceImpl implements ICustomerService{
 	private ICustomerDao customerDao;
 
 	@Transactional
-	public int insert(Customer customer) {
+	public Integer insert(Customer customer) {
 		return customerDao.insert(customer);
 	}
 
@@ -35,10 +35,35 @@ public class CustomerServiceImpl implements ICustomerService{
 		return customerDao.findCustomerByCondition(map);
 	}
 
+	/**
+	 * 分页查询数据
+	 * map传入数据：
+	 * 			currentPage：当前页（不传默认为第一页）
+	 * 			pageSize：每页的数量（不传默认为十条数据）
+	 */
 	@Override
-	public PageResult<Customer> findPageResult() {
-		// TODO Auto-generated method stub
-		return null;
+	public PageResult<Customer> findPageResult(Map<String,Object> map) {
+		Integer currentPage = Integer.parseInt(map.get("currentPage").toString());
+		Integer pageSize = Integer.parseInt(map.get("pageSize").toString());;
+		Integer totalCount = customerDao.findCountByCondition(map);
+		map.put("currentPage", (currentPage - 1) * pageSize);
+		List<Customer> rows = customerDao.findCustomerByCondition(map);
+		return new PageResult<>(currentPage, pageSize, totalCount, rows);
 	}
 	
+	@Override
+	public PageResult<Customer> findPageResult() {
+		Map<String,Object> map = new HashMap<>();
+		return findPageResult(map);
+	}
+
+	@Override
+	public Integer findCountByCondition(Map<String, Object> map) {
+		return customerDao.findCountByCondition(map);
+	}
+
+	@Override
+	public Integer delete(Integer id) {
+		return customerDao.delete(id);
+	}
 }

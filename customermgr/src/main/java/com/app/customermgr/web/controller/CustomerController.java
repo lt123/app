@@ -1,7 +1,6 @@
 package com.app.customermgr.web.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.app.customermgr.model.Customer;
 import com.app.customermgr.service.ICustomerService;
 
 @Controller
@@ -22,33 +19,21 @@ public class CustomerController {
 	@Autowired
 	private ICustomerService customerService;
 	
-	@RequestMapping(value="/list",method=RequestMethod.GET)
-	public ModelAndView list(){
-		System.err.println("CustomerController.list()");
+	@RequestMapping(value="/list/{currentPage}/{pageSize}",method=RequestMethod.GET)
+	public ModelAndView list(@PathVariable("currentPage")Integer currentPage,
+					@PathVariable("pageSize")Integer pageSize){
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("customers", customerService.findAllCustomer());
+		map.put("currentPage", currentPage);
+		map.put("pageSize", pageSize);
+ 		map.put("pageResult", customerService.findPageResult(map));
 		ModelAndView modelAndView = new ModelAndView("/customer/list", map);
 		return modelAndView;
 	}
 	
-	@RequestMapping(value="/index2",method=RequestMethod.GET)
-	public ModelAndView index2(String id){
-		System.out.println("CustomerController.index()" + id);
-		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("name", "name2");
-		ModelAndView modelAndView = new ModelAndView("forward:index.jsp", map);
-		return modelAndView;
+	@RequestMapping(value="/delete/{id}/{currentPage}/{pageSize}")
+	public String delete(@PathVariable("id")Integer id, @PathVariable("currentPage")Integer currentPage,
+			@PathVariable("pageSize")Integer pageSize){
+		customerService.delete(id);
+		return "redirect:/customer/list/" + currentPage + "/" + pageSize;
 	}
-	
-	@ResponseBody
-	@RequestMapping(value="/index3/{id}",method=RequestMethod.GET)
-	public List<Customer> index3(@PathVariable("id") String id){
-		System.err.println(">>>>>>>>>>>>>>>>>>>> " + id);
-		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("key1", "value1");
-		map.put("key2", "value2");
-		map.put("key3", "value3");
-		return customerService.findAllCustomer();
-	}
-	
 }
