@@ -14,7 +14,7 @@ import com.app.customermgr.service.ICustomerService;
 
 @Controller
 @RequestMapping(value="/customer")
-public class CustomerController {
+public class CustomerController extends BaseController{
 
 	@Autowired
 	private ICustomerService customerService;
@@ -26,6 +26,7 @@ public class CustomerController {
 		map.put("currentPage", currentPage);
 		map.put("pageSize", pageSize);
  		map.put("pageResult", customerService.findPageResult(map));
+ 		System.err.println(map);
 		ModelAndView modelAndView = new ModelAndView("/customer/list", map);
 		return modelAndView;
 	}
@@ -35,5 +36,11 @@ public class CustomerController {
 			@PathVariable("pageSize")Integer pageSize){
 		customerService.delete(id);
 		return "redirect:/customer/list/" + currentPage + "/" + pageSize;
+	}
+	
+	@RequestMapping(value="/test",method=RequestMethod.GET)
+	public void testException() throws Exception {
+		System.out.println("CustomerController.testException()");
+		System.out.println(1/0);
 	}
 }
